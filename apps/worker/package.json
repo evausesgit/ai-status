@@ -1,0 +1,26 @@
+{
+  "name": "@ai-status/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node --watch --experimental-specifier-resolution=node src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-status/checkers": "workspace:*",
+    "@ai-status/db": "workspace:*",
+    "drizzle-orm": "^0.31.2",
+    "postgres": "^3.4.4",
+    "bullmq": "^5.7.0",
+    "ioredis": "^5.4.1",
+    "ulid": "^2.3.0",
+    "yaml": "^2.4.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  }
+}

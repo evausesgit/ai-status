@@ -1,0 +1,32 @@
+{
+  "name": "ai-status",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Open-source AI provider status monitoring",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm --filter './packages/*' build && pnpm --filter './apps/*' build",
+    "typecheck": "pnpm --recursive typecheck",
+    "lint": "pnpm --recursive lint",
+    "db:generate": "pnpm --filter @ai-status/db generate",
+    "db:migrate": "pnpm --filter @ai-status/db migrate",
+    "db:studio": "pnpm --filter @ai-status/db studio"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12",
+    "tsx": "^4.15.0",
+    "dotenv-cli": "^7.4.2"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "msgpackr-extract", "sharp"]
+  }
+}

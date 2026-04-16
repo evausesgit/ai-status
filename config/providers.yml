@@ -1,0 +1,104 @@
+# =============================================================================
+# AI Status — Configuration des providers et modèles
+#
+# Les variables d'environnement sont supportées dans les champs `headers` :
+#   ${MY_VAR} sera remplacé par la valeur de process.env.MY_VAR au runtime
+#
+# Copiez ce fichier, adaptez-le à votre infrastructure, et ne committez pas
+# vos clés API (utilisez un .env ou un secret manager).
+# =============================================================================
+
+providers:
+  # --------------------------------------------------------------------------
+  # Exemple : votre propre API interne
+  # --------------------------------------------------------------------------
+  - name: MyCompany AI
+    slug: mycompany
+    website: https://ai.mycompany.com
+    description: Internal AI platform
+
+    models:
+      - id: my-model-v1
+        name: MyModel v1
+        description: Production model
+        check:
+          type: http
+          endpoint: https://api.mycompany.com/health
+          method: GET
+          intervalSeconds: 60
+          timeoutMs: 10000
+          expectedStatus: 200
+          latencyWarnMs: 2000
+          latencyCriticalMs: 5000
+
+      - id: my-model-v2
+        name: MyModel v2
+        description: Latest generation
+        check:
+          type: chat_completion
+          endpoint: https://api.mycompany.com/v1/chat/completions
+          headers:
+            Authorization: "Bearer ${MYCOMPANY_API_KEY}"
+            Content-Type: application/json
+          model: my-model-v2
+          intervalSeconds: 120
+          timeoutMs: 15000
+          latencyWarnMs: 3000
+          latencyCriticalMs: 8000
+
+      - id: my-model-v3
+        name: MyModel v3 (Claude)
+        description: Powered by Anthropic claude-sonnet-4-6
+        check:
+          type: chat_completion
+          endpoint: https://api.anthropic.com/v1/messages
+          headers:
+            x-api-key: "${ANTHROPIC_API_KEY}"
+            anthropic-version: "2023-06-01"
+            Content-Type: application/json
+          model: claude-sonnet-4-6
+          intervalSeconds: 120
+          timeoutMs: 20000
+          latencyWarnMs: 4000
+          latencyCriticalMs: 12000
+
+  # --------------------------------------------------------------------------
+  # Exemple : Anthropic (à activer si vous souhaitez monitorer Claude)
+  # --------------------------------------------------------------------------
+  # - name: Anthropic
+  #   slug: anthropic
+  #   website: https://anthropic.com
+  #   models:
+  #     - id: claude-3-5-sonnet
+  #       name: Claude 3.5 Sonnet
+  #       check:
+  #         type: chat_completion
+  #         endpoint: https://api.anthropic.com/v1/messages
+  #         headers:
+  #           x-api-key: "${ANTHROPIC_API_KEY}"
+  #           anthropic-version: "2023-06-01"
+  #         model: claude-3-5-sonnet-20241022
+  #         intervalSeconds: 300
+  #         timeoutMs: 20000
+  #         latencyWarnMs: 5000
+  #         latencyCriticalMs: 15000
+
+  # --------------------------------------------------------------------------
+  # Exemple : OpenAI
+  # --------------------------------------------------------------------------
+  # - name: OpenAI
+  #   slug: openai
+  #   website: https://openai.com
+  #   models:
+  #     - id: gpt-4o
+  #       name: GPT-4o
+  #       check:
+  #         type: chat_completion
+  #         endpoint: https://api.openai.com/v1/chat/completions
+  #         headers:
+  #           Authorization: "Bearer ${OPENAI_API_KEY}"
+  #         model: gpt-4o
+  #         intervalSeconds: 300
+  #         timeoutMs: 20000
+  #         latencyWarnMs: 5000
+  #         latencyCriticalMs: 15000
