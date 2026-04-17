@@ -1,11 +1,6 @@
 import type { ChatCompletionCheckConfig } from '@ai-status/db'
 import type { CheckResult } from './types'
 
-/**
- * Checker pour les API de type chat completion (OpenAI-compatible).
- * Envoie un message "ping" minimal et mesure la latence jusqu'au
- * premier token (time-to-first-token).
- */
 export async function runChatCompletionCheck(
   config: ChatCompletionCheckConfig
 ): Promise<CheckResult> {
@@ -20,25 +15,16 @@ export async function runChatCompletionCheck(
       ...config.headers,
     })
 
-    // Détecte si l'endpoint est Anthropic (utilise /v1/messages)
-    const isAnthropic = config.endpoint.includes('anthropic.com')
-
-    const body = isAnthropic
-      ? {
-          model: config.model,
-          max_tokens: 1,
-          messages: [{ role: 'user', content: 'ping' }],
-        }
-      : {
-          model: config.model,
-          messages: [{ role: 'user', content: 'ping' }],
-          max_tokens: 1,
-        }
+    const requestBody = {
+      model: config.model,
+      messages: [{ role: 'user', content: 'ping' }],
+      max_tokens: 1,
+    }
 
     const response = await fetch(config.endpoint, {
       method: 'POST',
       headers,
-      body: JSON.stringify(body),
+      body: JSON.stringify(requestBody),
       signal: controller.signal,
     })
 
@@ -57,6 +43,28 @@ export async function runChatCompletionCheck(
         latencyMs,
         httpStatus: response.status,
         errorMessage,
+      }
+    }
+
+    let responseBody: unknown
+    try {
+      responseBody = await response.json()
+    } catch {
+      return {
+        status: 'major_outage',
+        latencyMs,
+        httpStatus: response.status,
+        errorMessage: 'Invalid JSON response',
+      }
+    }
+
+    const content = (responseBody as any)?.choices?.[0]?.message?.content
+    if (typeof content !== 'string') {
+      return {
+        status: 'major_outage',
+        latencyMs,
+        httpStatus: response.status,
+        errorMessage: `Unexpected response shape: ${JSON.stringify(responseBody).slice(0, 200)}`,
       }
     }
 
