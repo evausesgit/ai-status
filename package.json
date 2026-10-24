@@ -17,16 +17,20 @@
     "db:studio": "pnpm --filter @ai-status/db studio"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "@types/node": "^20.12.12",
-    "tsx": "^4.15.0",
-    "dotenv-cli": "^7.4.2"
+    "@types/node": "^20.19.43",
+    "dotenv-cli": "^7.4.4",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20",
     "pnpm": ">=9"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "msgpackr-extract", "sharp"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "msgpackr-extract",
+      "sharp"
+    ]
   }
 }
