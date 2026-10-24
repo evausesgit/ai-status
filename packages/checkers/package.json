@@ -12,7 +12,7 @@
     "@ai-status/db": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "@types/node": "^20.12.12"
+    "@types/node": "^20.19.43",
+    "typescript": "^5.9.3"
   }
 }
